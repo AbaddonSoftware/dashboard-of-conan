@@ -1,0 +1,25 @@
+
+{
+  "name": "Da shboard of Conan",  
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+    "service": "web",
+    "workspaceFolder": "/app",
+    "shutdownAction": "stopCompose",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    },
+
+    "remoteUser": "root",
+    "postCreateCommand": "pip install --no-cache-dir -r requirements.txt",
+    "overrideCommand": false
+}
+}
+
