@@ -1,0 +1,46 @@
+# --- Git-related ---
+.git
+.gitignore
+
+# --- Python cache ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Local development env ---
+.venv
+env/
+venv/
+*.env
+.env.*
+
+# Ignore Markdown files
+*.md
+
+# --- Licenses ---
+LICENSE
+LICENSE.*
+
+# --- Dev Containers ---
+.devcontainer/
+.devcontainer.json
+
+# --- OS / Editor junk ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# --- Logs ---
+*.log
+
+# --- Docker files we don't need inside container ---
+docker-compose*.yml
+Dockerfile*
+
+# --- Testing / Coverage ---
+.coverage
+htmlcov/
+.pytest_cache/

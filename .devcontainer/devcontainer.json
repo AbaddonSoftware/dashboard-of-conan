@@ -1,6 +1,6 @@
 
 {
-  "name": "Da shboard of Conan",  
+  "name": "Da Shboard of Conan",  
   "dockerComposeFile": [
     "../docker-compose.yml"
   ],
