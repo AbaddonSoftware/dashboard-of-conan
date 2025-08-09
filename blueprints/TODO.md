@@ -2,6 +2,12 @@
 
 ## Planned Features
 
+### Add Discord OAuth2
+  - defaultExpanded: false
+
+### Add Postgres Integration
+  - defaultExpanded: false
+
 ## In Progress
 
 ## Completed
