@@ -1,7 +1,7 @@
 from . import bp
 from flask import render_template
 
-@bp.route("/")
+@bp.route("/dashboard")
 def index():
-    return render_template("index.html")
+    return render_template("dashboard.html")
 
