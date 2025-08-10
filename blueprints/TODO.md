@@ -2,13 +2,17 @@
 
 ## Planned Features
 
-### Add Discord OAuth2
-  - defaultExpanded: false
+
 
 ### Add Postgres Integration
   - defaultExpanded: false
 
 ## In Progress
+
+### Add Discord OAuth2
+  - defaultExpanded: false
+  [x] Create Auth Interface
+  [ ] Implement Oauth2 using Authlib
 
 ## Completed
 
