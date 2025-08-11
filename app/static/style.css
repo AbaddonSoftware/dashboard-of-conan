@@ -7,7 +7,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 10px;
 
   /* Base parchment color */
   background-color: #d2b48c;
