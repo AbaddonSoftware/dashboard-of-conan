@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cinzel&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel&display=swap");
 
 body {
   margin: 0;
@@ -12,28 +12,35 @@ body {
   background-color: #d2b48c;
 
   /* Layered gradients for rustic tones + paper texture */
-  background-image: 
-    radial-gradient(circle at top left, rgba(255, 245, 230, 0.25), transparent 50%),
-    radial-gradient(circle at bottom right, rgba(139, 69, 19, 0.15), transparent 60%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%),
-    url('https://www.transparenttextures.com/patterns/beige-paper.png');
+  background-image: radial-gradient(
+      circle at top left,
+      rgba(255, 245, 230, 0.25),
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(139, 69, 19, 0.15),
+      transparent 60%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(0, 0, 0, 0.05) 100%
+    ),
+    url("https://www.transparenttextures.com/patterns/beige-paper.png");
 
   background-blend-mode: multiply, multiply, overlay, normal;
   background-size: cover;
   background-repeat: repeat;
-
   box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.3);
 }
 
 header {
   padding: 1.5rem;
   text-align: center;
-  font-family: 'MedievalSharp', serif;
+  font-family: "MedievalSharp", serif;
   color: #3b2f2f;
-
 }
-
-
 
 header h1 {
   font-size: 3rem;
@@ -48,22 +55,22 @@ header p {
 }
 
 .login-box {
-    /* background: #23272a; */
-    padding: 2em;
-    display: inline-block;
+  /* background: #23272a; */
+  padding: 2em;
+  display: inline-block;
 }
 .btn {
-    background: #5865F2; /* Discord blurple */
-    border: none;
-    padding: 0.75em 1.5em;
-    border-radius: 5px;
-    font-size: 1em;
-    color: #fff;
-    cursor: pointer;
-    text-decoration: none;
+  background: #5865f2; /* Discord blurple */
+  border: none;
+  padding: 0.75em 1.5em;
+  border-radius: 5px;
+  font-size: 1em;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
 }
 .btn:hover {
-    background: #4752c4;
+  background: #4752c4;
 }
 
 .dashboard {
@@ -78,7 +85,6 @@ header p {
 .login-box p {
   font-size: 1.2rem;
   margin-bottom: 1rem;
-
 }
 
 .card {
@@ -86,7 +92,7 @@ header p {
   border: 2px solid rgba(0, 0, 0, 0.3);
   padding: 1rem;
   border-radius: 8px;
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   color: #3b2f2f;
   text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;

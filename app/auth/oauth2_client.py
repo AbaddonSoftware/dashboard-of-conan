@@ -33,14 +33,14 @@ class TokenExchangeError(AuthError):
     pass
 
 
-class AuthClient(Protocol):
+class OAuth2Client(Protocol):
     """Abstract OAuth client interface for Discord."""
 
-    def login_redirect(self, redirect_uri: str, *, state: Optional[str] = None) -> str:
+    def login_redirect(self) -> str:
         """Return a full provider authorize URL to redirect the user to."""
         ...
 
-    def exchange_code(self, code: str, redirect_uri: str) -> Tokens:
+    def exchange_code(self, code: str) -> Tokens:
         """Exchange auth 'code' for tokens."""
         ...
 
