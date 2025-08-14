@@ -1,7 +1,8 @@
 from . import bp
-from flask import render_template
+from flask import render_template, session  
 
-@bp.route("/dashboard")
+@bp.route("/")
 def index():
-    return render_template("dashboard.html")
+    user = session.get("user")
+    return render_template("dashboard.html", user=user)
 

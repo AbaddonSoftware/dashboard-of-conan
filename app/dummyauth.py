@@ -1,2 +1,3 @@
+from flask import session
 def is_authenticated() -> bool:
-    return True
+    return "user" in session

@@ -9,7 +9,7 @@
         <header>
         <h1>Login</h1>
         <p>Sign in with your Discord account to access the dashboard.</p>
-        <a class="btn" href="#">Login with Discord</a>
+        <a class="btn" href="{{ url_for('auth.start', next=next_url) if next_url else url_for('auth.start') }}">Login with Discord</a>
         </header>
     </div>
 </body>

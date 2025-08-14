@@ -4,7 +4,9 @@
   <h1>Da Shboard of Conan</h1>
   <p>Command your realms, schedule events, and slay your admin tasks.</p>
 </header>
-
+{% if user %}
+<a href="{{ url_for('auth.logout') }}" class="btn">Logout</a>
+{% endif %}
 <main class="dashboard">
   <div class="card">
     <h2>Administration</h2>

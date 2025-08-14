@@ -1,7 +1,8 @@
 from flask import redirect, session, Response
-import os, secrets, requests
+import requests
+import os, secrets
 from urllib.parse import urlencode
-from app.auth.oauth2_client import OAuth2Client, Tokens, UserProfile
+from .oauth2_client import OAuth2Client, Tokens, UserProfile
 
 
 DISCORD_CLIENT_ID = os.getenv("DISCORD_CLIENT_ID")
@@ -12,8 +13,8 @@ DISCORD_AUTH_URL = "https://discord.com/api/oauth2/authorize"
 DISCORD_TOKEN_URL = "https://discord.com/api/oauth2/token"
 DISCORD_REVOKE_URL = "https://discord.com/api/oauth2/token/revoke"
 DISCORD_ME_URL = "https://discord.com/api/users/@me"
-OAUTH_SCOPES = ["identify", "guilds"]
 
+OAUTH_SCOPES = ["identify", "guilds"]
 FORM_HEADERS = {"Content-Type": "application/x-www-form-urlencoded"}
 
 
@@ -102,7 +103,6 @@ class DiscordOAuth2Client(OAuth2Client):
         )
 
     def revoke(self, tokens: Tokens) -> None:
-        # Discord requires form-encoded body for revocation.
         data = {
             "client_id": DISCORD_CLIENT_ID,
             "client_secret": DISCORD_CLIENT_SECRET,
