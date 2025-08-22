@@ -12,13 +12,12 @@ from flask import (
     abort,
 )
 
-# from .discord_oauth2_client import DiscordOAuth2Client
-from .discord_authlib_client import DiscordAuthlibClient
+from .discord_oauth2_client import DiscordOAuth2Client
+# from .discord_authlib_client import DiscordAuthlibClient as DiscordOAuth2Client
 from .oauth2_client import Tokens, UserProfile
 from . import bp
 
-# oauth = DiscordOAuth2Client()
-oauth = DiscordAuthlibClient()
+oauth = DiscordOAuth2Client()
 
 
 # --- helpers ---------------------------------------------------------------

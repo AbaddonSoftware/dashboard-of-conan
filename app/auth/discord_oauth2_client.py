@@ -17,6 +17,9 @@ DISCORD_ME_URL = "https://discord.com/api/users/@me"
 OAUTH_SCOPES = ["identify", "guilds"]
 FORM_HEADERS = {"Content-Type": "application/x-www-form-urlencoded"}
 
+def init_oauth(app):
+    # Stupid hack. Code that does nothing is the best kind of code. #TODO destroy this habit
+    return None
 
 class DiscordOAuth2Client(OAuth2Client):
     def login_redirect(self) -> Response:
