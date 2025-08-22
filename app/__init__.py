@@ -1,5 +1,6 @@
 import os
 from flask import Flask, request, redirect, url_for
+from app.auth.discord_authlib_client import init_oauth
 from app.dummyauth import is_authenticated
 from app.guard import guard_request
 
@@ -11,6 +12,8 @@ def create_app():
         SESSION_COOKIE_SECURE=False,     # only for http://localhost dev
         SESSION_COOKIE_SAMESITE="Lax",   # default; good for OAuth callbacks
         )
+
+    # init_oauth(app)
 
     from .auth import bp as auth_bp
     from .dashboard import bp as dashboard_bp

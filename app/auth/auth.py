@@ -11,13 +11,13 @@ from flask import (
     url_for,
     abort,
 )
-import requests
 from .discord_oauth2_client import DiscordOAuth2Client 
+# from .discord_authlib_client import DiscordAuthlibClient
 from .oauth2_client import Tokens, UserProfile
 from . import bp
 
-
-oauth = DiscordOAuth2Client() 
+oauth = DiscordOAuth2Client()
+# oauth = DiscordAuthlibClient() 
 
 
 # --- helpers ---------------------------------------------------------------
@@ -70,37 +70,14 @@ def start():  # user clicked the button on /auth/login
 
 @bp.get("/callback")
 def callback():
-    """
-    Handles Discord's redirect back.
-    - verifies 'state' against the one stored in session
-    - exchanges 'code' for tokens
-    - fetches the user profile
-    - stores minimal auth info in session
-    - redirects to saved 'after_login' or dashboard
-    """
-    err = request.args.get("error")
-    if err:
-        # You could flash a message here instead.
-        abort(400, f"OAuth error from provider: {err}")
 
-    # CSRF state verification
-    sent_state = request.args.get("state")
-    stored_state = session.pop("oauth_state", None)  # one-time use
-    if not sent_state or not stored_state or sent_state != stored_state:
-        abort(400, "State mismatch.")
 
-    code = request.args.get("code")
-    if not code:
-        abort(400, "Missing authorization code.")
-
-    # Exchange code for tokens, then fetch the user
     try:
-        tokens: Tokens = oauth.exchange_code(code)
+        tokens: Tokens = oauth.exchange_code()
         profile: UserProfile = oauth.fetch_user(tokens)
     except Exception as e:
         abort(400, f"Token exchange or user fetch failed: {e}")
 
-    # Persist minimal auth context in session for your guard/is_authenticated()
     session["tokens"] = _pack_tokens(tokens)
     session["user"] = {
         "id": profile.id,
@@ -109,7 +86,6 @@ def callback():
         "avatar": profile.avatar,
     }
 
-    # Prefer the URL your guard stored; otherwise go to dashboard
     target = session.pop("after_login", None)
     if not _is_safe_next_url(target):
         target = url_for("dashboard.index")  # ensure this endpoint exists

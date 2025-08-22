@@ -40,7 +40,7 @@ class OAuth2Client(Protocol):
         """Return a full provider authorize URL to redirect the user to."""
         ...
 
-    def exchange_code(self, code: str) -> Tokens:
+    def exchange_code(self) -> Tokens:
         """Exchange auth 'code' for tokens."""
         ...
 

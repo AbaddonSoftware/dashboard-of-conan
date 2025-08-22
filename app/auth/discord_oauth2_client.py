@@ -1,8 +1,8 @@
-from flask import redirect, session, Response
+from flask import redirect, session, Response, request
 import requests
 import os, secrets
 from urllib.parse import urlencode
-from .oauth2_client import OAuth2Client, Tokens, UserProfile
+from .oauth2_client import OAuth2Client, Tokens, TokenExchangeError, UserProfile, StateMismatch
 
 
 DISCORD_CLIENT_ID = os.getenv("DISCORD_CLIENT_ID")
@@ -34,7 +34,16 @@ class DiscordOAuth2Client(OAuth2Client):
         query_string = urlencode(params)
         return redirect(f"{DISCORD_AUTH_URL}?{query_string}")
 
-    def exchange_code(self, code: str) -> Tokens:
+    def exchange_code(self) -> Tokens:
+        code = request.args.get("code")
+        if not code:
+            raise TokenExchangeError("Missing authorization code")
+
+        expected = session.pop("oauth_state", None)
+        state = request.args.get("state")
+        if expected is not None and state != expected:
+            raise StateMismatch("state mismatch")
+
         data = {
             "client_id": DISCORD_CLIENT_ID,
             "client_secret": DISCORD_CLIENT_SECRET,
@@ -43,14 +52,7 @@ class DiscordOAuth2Client(OAuth2Client):
             "redirect_uri": DISCORD_REDIRECT_URI,
             "scope": " ".join(OAUTH_SCOPES),
         }
-        headers = FORM_HEADERS
-
-        r = requests.post(
-            DISCORD_TOKEN_URL,
-            data=data,
-            headers=headers,
-            timeout=10,
-        )
+        r = requests.post(DISCORD_TOKEN_URL, data=data, headers=FORM_HEADERS, timeout=10)
         r.raise_for_status()
         payload = r.json()
         return Tokens(
