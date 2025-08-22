@@ -66,10 +66,8 @@ class DiscordAuthlibClient(OAuth2Client):
             "access_token": tokens.access_token,
             "token_type": tokens.token_type or "Bearer",
         }
-        resp = _get_client.get(token=bearer)
-        if resp.status_code != 200:
-            raise TokenExchangeError("Failed to fetch user profile.")
-        data = resp.json()
+        client = _get_client()
+        data = dict(client.userinfo(token=bearer))
         return UserProfile(
             id=data["id"],
             username=data["username"],
