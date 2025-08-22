@@ -79,7 +79,8 @@ class DiscordAuthlibClient(OAuth2Client):
     def refresh(self, tokens: Tokens) -> Tokens:
         if not tokens.refresh_token:
             return tokens
-        new_token = _get_client.refresh_token(
+        new_token = _get_client().refresh_token(
+            DISCORD_TOKEN_URL,
             refresh_token=tokens.refresh_token,
         )
         return Tokens(
@@ -92,16 +93,16 @@ class DiscordAuthlibClient(OAuth2Client):
 
     def revoke(self, tokens: Tokens) -> None:
         client = _get_client()
+        
         if tokens.access_token:
             client.revoke_token(
-                data={"token": tokens.access_token, "token_type_hint": "access_token"},
+                token=tokens.access_token,
+                token_type_hint="access_token",
                 withhold_token=True,
             )
         if tokens.refresh_token:
             client.revoke_token(
-                data={
-                    "token": tokens.refresh_token,
-                    "token_type_hint": "refresh_token",
-                },
+                token=tokens.access_token,
+                token_type_hint="refresh_token",
                 withhold_token=True,
             )
