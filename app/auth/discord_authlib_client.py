@@ -1,5 +1,3 @@
-
-
 from __future__ import annotations
 import os
 from flask import Response
@@ -17,10 +15,10 @@ DISCORD_REVOKE_URL = "https://discord.com/api/oauth2/token/revoke"
 DISCORD_ME_URL = "https://discord.com/api/users/@me"
 
 OAUTH_SCOPES = ["identify", "guilds"]
-FORM_HEADERS = {"Content-Type": "application/x-www-form-urlencoded"}
 
 
 oauth = OAuth()
+
 
 def init_oauth(app) -> OAuth:
     oauth.init_app(app)
@@ -31,24 +29,28 @@ def init_oauth(app) -> OAuth:
         access_token_url=DISCORD_TOKEN_URL,
         authorize_url=DISCORD_AUTH_URL,
         revoke_url=DISCORD_REVOKE_URL,
+        userinfo_endpoint=DISCORD_ME_URL,
         client_kwargs={
             "scope": " ".join(OAUTH_SCOPES),
             "token_endpoint_auth_method": "client_secret_post",
+            "timeout": 10,
         },
         redirect_uri=DISCORD_REDIRECT_URI,
     )
     return oauth
 
-def get_discord():
+
+def _get_client():
     return oauth.create_client("discord")
+
 
 class DiscordAuthlibClient(OAuth2Client):
     def login_redirect(self) -> Response:
-        return get_discord().authorize_redirect()
+        return _get_client().authorize_redirect()
 
     def exchange_code(self) -> Tokens:
         try:
-            token = get_discord().authorize_access_token()
+            token = _get_client().authorize_access_token()
         except Exception as exc:
             raise TokenExchangeError(f"Token exchange failed: {exc}") from exc
         return Tokens(
@@ -64,7 +66,7 @@ class DiscordAuthlibClient(OAuth2Client):
             "access_token": tokens.access_token,
             "token_type": tokens.token_type or "Bearer",
         }
-        resp = get_discord().get(DISCORD_ME_URL, token=bearer)
+        resp = _get_client.get(token=bearer)
         if resp.status_code != 200:
             raise TokenExchangeError("Failed to fetch user profile.")
         data = resp.json()
@@ -79,8 +81,7 @@ class DiscordAuthlibClient(OAuth2Client):
     def refresh(self, tokens: Tokens) -> Tokens:
         if not tokens.refresh_token:
             return tokens
-        new_token = get_discord().refresh_token(
-            DISCORD_TOKEN_URL,
+        new_token = _get_client.refresh_token(
             refresh_token=tokens.refresh_token,
         )
         return Tokens(
@@ -92,16 +93,17 @@ class DiscordAuthlibClient(OAuth2Client):
         )
 
     def revoke(self, tokens: Tokens) -> None:
-        c = get_discord()
+        client = _get_client()
         if tokens.access_token:
-            c.post(
-                DISCORD_REVOKE_URL,
+            client.revoke_token(
                 data={"token": tokens.access_token, "token_type_hint": "access_token"},
                 withhold_token=True,
             )
         if tokens.refresh_token:
-            c.post(
-                DISCORD_REVOKE_URL,
-                data={"token": tokens.refresh_token, "token_type_hint": "refresh_token"},
+            client.revoke_token(
+                data={
+                    "token": tokens.refresh_token,
+                    "token_type_hint": "refresh_token",
+                },
                 withhold_token=True,
             )

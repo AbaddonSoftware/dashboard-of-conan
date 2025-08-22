@@ -11,16 +11,18 @@ from flask import (
     url_for,
     abort,
 )
-from .discord_oauth2_client import DiscordOAuth2Client 
-# from .discord_authlib_client import DiscordAuthlibClient
+
+# from .discord_oauth2_client import DiscordOAuth2Client
+from .discord_authlib_client import DiscordAuthlibClient
 from .oauth2_client import Tokens, UserProfile
 from . import bp
 
-oauth = DiscordOAuth2Client()
-# oauth = DiscordAuthlibClient() 
+# oauth = DiscordOAuth2Client()
+oauth = DiscordAuthlibClient()
 
 
 # --- helpers ---------------------------------------------------------------
+
 
 def _is_safe_next_url(value: str | None) -> bool:
     """Only allow same-origin relative paths to avoid open redirects."""
@@ -28,6 +30,7 @@ def _is_safe_next_url(value: str | None) -> bool:
         return False
     parsed = urlparse(value)
     return parsed.scheme == "" and parsed.netloc == "" and value.startswith("/")
+
 
 def _pack_tokens(t: Tokens) -> dict:
     # Keep only serializable bits in the session
@@ -37,6 +40,7 @@ def _pack_tokens(t: Tokens) -> dict:
         "expires_in": t.expires_in,
         "token_type": t.token_type or "Bearer",
     }
+
 
 def _unpack_tokens(d: dict | None) -> Tokens | None:
     if not d:
@@ -52,11 +56,13 @@ def _unpack_tokens(d: dict | None) -> Tokens | None:
 
 # --- routes ----------------------------------------------------------------
 
+
 @bp.get("/login")
 def login():
     # If guard redirected here with ?next=..., pass it through to the template
     next_url = request.args.get("next")
     return render_template("login.html", next_url=next_url)
+
 
 @bp.get("/start")
 def start():  # user clicked the button on /auth/login
@@ -70,7 +76,6 @@ def start():  # user clicked the button on /auth/login
 
 @bp.get("/callback")
 def callback():
-
 
     try:
         tokens: Tokens = oauth.exchange_code()
@@ -102,7 +107,6 @@ def logout():
     token_dict = session.get("tokens")
     tokens = _unpack_tokens(token_dict)
 
-    # Best-effort revoke; ignore failures
     if tokens:
         try:
             oauth.revoke(tokens)

@@ -13,7 +13,7 @@ def create_app():
         SESSION_COOKIE_SAMESITE="Lax",   # default; good for OAuth callbacks
         )
 
-    # init_oauth(app)
+    init_oauth(app)
 
     from .auth import bp as auth_bp
     from .dashboard import bp as dashboard_bp
