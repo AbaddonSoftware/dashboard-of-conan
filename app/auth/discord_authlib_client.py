@@ -67,6 +67,11 @@ class DiscordAuthlibClient(OAuth2Client):
             "token_type": tokens.token_type or "Bearer",
         }
         client = _get_client()
+
+        try:
+            data = dict(client.userinfo(token=bearer))
+        except Exception as e:
+            raise TokenExchangeError(f"Failed to fetch user profile: {e}") from e
         data = dict(client.userinfo(token=bearer))
         return UserProfile(
             id=data["id"],
@@ -93,7 +98,7 @@ class DiscordAuthlibClient(OAuth2Client):
 
     def revoke(self, tokens: Tokens) -> None:
         client = _get_client()
-        
+
         if tokens.access_token:
             client.revoke_token(
                 token=tokens.access_token,
@@ -102,7 +107,7 @@ class DiscordAuthlibClient(OAuth2Client):
             )
         if tokens.refresh_token:
             client.revoke_token(
-                token=tokens.access_token,
+                token=tokens.refresh_token,
                 token_type_hint="refresh_token",
                 withhold_token=True,
             )
