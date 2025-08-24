@@ -45,14 +45,17 @@ def _get_client():
 
 
 class DiscordAuthlibClient(OAuth2Client):
+
     def login_redirect(self) -> Response:
         return _get_client().authorize_redirect()
 
     def exchange_code(self) -> Tokens:
+
         try:
             token = _get_client().authorize_access_token()
-        except Exception as exc:
-            raise TokenExchangeError(f"Token exchange failed: {exc}") from exc
+        except:
+            raise TokenExchangeError(f"Token exchange failed")
+
         return Tokens(
             access_token=token.get("access_token"),
             refresh_token=token.get("refresh_token"),
@@ -66,13 +69,14 @@ class DiscordAuthlibClient(OAuth2Client):
             "access_token": tokens.access_token,
             "token_type": tokens.token_type or "Bearer",
         }
+
         client = _get_client()
 
         try:
             data = dict(client.userinfo(token=bearer))
-        except Exception as e:
-            raise TokenExchangeError(f"Failed to fetch user profile: {e}") from e
-        data = dict(client.userinfo(token=bearer))
+        except:
+            raise TokenExchangeError(f"Failed to fetch user profile")
+
         return UserProfile(
             id=data["id"],
             username=data["username"],
@@ -84,10 +88,12 @@ class DiscordAuthlibClient(OAuth2Client):
     def refresh(self, tokens: Tokens) -> Tokens:
         if not tokens.refresh_token:
             return tokens
+
         new_token = _get_client().refresh_token(
             DISCORD_TOKEN_URL,
             refresh_token=tokens.refresh_token,
         )
+
         return Tokens(
             access_token=new_token.get("access_token"),
             refresh_token=new_token.get("refresh_token") or tokens.refresh_token,
